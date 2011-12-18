@@ -1,10 +1,12 @@
 package org.dyndns.pamelloes.Clog;
 
+import java.lang.reflect.Constructor;
+
 import org.bukkit.event.server.PluginDisableEvent;
 import org.bukkit.event.server.PluginEnableEvent;
 import org.bukkit.event.server.ServerListener;
-
-import com.platymuus.bukkit.permissions.PermissionsPlugin;
+import org.bukkit.plugin.Plugin;
+import org.dyndns.pamelloes.Clog.permissions.PermissionsHandler;
 
 public class ClogServerListener extends ServerListener {
 	private Clog clog;
@@ -15,11 +17,20 @@ public class ClogServerListener extends ServerListener {
 	
 	@Override
 	public void onPluginEnable(PluginEnableEvent e) {
-		if(e.getPlugin() instanceof PermissionsPlugin)  clog.setSuperPerms((PermissionsPlugin) e.getPlugin());
+		if(e.getPlugin().getDescription().getName().equals("PermissionsBukkit")) {
+			try {
+				Class<? extends Object> clazz = Class.forName("org.dyndns.pamelloes.Clog.permissions.SuperPermsHandler");
+				Constructor<? extends Object> c = clazz.getConstructor(Clog.class, Plugin.class);
+				PermissionsHandler ph = (PermissionsHandler) c.newInstance(clog, e.getPlugin());
+				clog.setHandler(ph);
+			} catch(Exception ex) {
+				//ignore
+			}
+		}
 	}
 	
 	@Override
 	public void onPluginDisable(PluginDisableEvent e) {
-		if(e.getPlugin() instanceof PermissionsPlugin) clog.setSuperPerms(null);
+		if(clog.getHandler().getPlugin().equals(e.getPlugin())) clog.setHandler(null);
 	}
 }

@@ -13,11 +13,11 @@ public class ClogPlayerListener extends PlayerListener {
 	
 	@Override
 	public void onPlayerKick(PlayerKickEvent e) {
-		clog.restoreGroupsSuperPerms(e.getPlayer());
+		clog.restoreGroups(e.getPlayer());
 	}
 	
 	@Override
 	public void onPlayerQuit(PlayerQuitEvent e) {
-		clog.restoreGroupsSuperPerms(e.getPlayer());
+		clog.restoreGroups(e.getPlayer());
 	}
 }
