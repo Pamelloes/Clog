@@ -16,8 +16,11 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Event.Priority;
 import org.bukkit.event.Event.Type;
+import org.bukkit.permissions.Permission;
+import org.bukkit.permissions.PermissionDefault;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.getspout.spoutapi.player.SpoutPlayer;
 
 import com.platymuus.bukkit.permissions.Group;
 import com.platymuus.bukkit.permissions.PermissionsPlugin;
@@ -39,6 +42,11 @@ public class Clog extends JavaPlugin {
 		pm.registerEvent(Type.CUSTOM_EVENT, cspl, Priority.Monitor, this);
 		pm.registerEvent(Type.PLAYER_QUIT, cpl, Priority.Monitor, this);
 		pm.registerEvent(Type.PLAYER_KICK, cpl, Priority.Monitor, this);
+		Permission p = new Permission("clog.ignore", "Allows the player to keep his or her rank without using Spoutcraft.");
+		p.setDefault(PermissionDefault.OP);
+		pm.addPermission(p);
+		
+		
 		File config = new File(getDataFolder(), "config.yml");
 		if(!config.exists()) {
 			try {
@@ -47,10 +55,20 @@ public class Clog extends JavaPlugin {
 				log.log(Level.WARNING, "[Clog] Could not create a config file.", e);
 			}
 		}
+		
+		for(Player pl : getServer().getOnlinePlayers()) {
+			SpoutPlayer sp = (SpoutPlayer) pl;
+			if(sp.hasPermission("clog.ignore")) continue;
+			if(sp.isSpoutCraftEnabled()) continue;
+			saveGroupsSuperPerms(sp);
+			setGroupsSuperPerms(sp, "You must be using Spoutcraft", getLowestGroupSuperPerms());
+		}
+		
 		log.info("[Clog] Clog enabled.");
 	}
 	
 	public void onDisable() {
+		for(Player p : superpermsmap.keySet()) restoreGroupsSuperPerms(p, "Clog is being disabled.");
 		File config = new File(getDataFolder(), "config.yml");
 		try {
 			getConfig().save(config);
