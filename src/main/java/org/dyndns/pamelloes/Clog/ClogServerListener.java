@@ -26,6 +26,15 @@ public class ClogServerListener extends ServerListener {
 			} catch(Exception ex) {
 				//ignore
 			}
+		} else if(e.getPlugin().getDescription().getName().equals("PermissionsEx")) {
+			try {
+				Class<? extends Object> clazz = Class.forName("org.dyndns.pamelloes.Clog.permissions.PEXHandler");
+				Constructor<? extends Object> c = clazz.getConstructor(Clog.class, Plugin.class);
+				PermissionsHandler ph = (PermissionsHandler) c.newInstance(clog, e.getPlugin());
+				clog.setHandler(ph);
+			} catch(Exception ex) {
+				//ignore
+			}
 		}
 	}
 	

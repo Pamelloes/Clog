@@ -72,6 +72,10 @@ public class SuperPermsHandler implements PermissionsHandler {
 			ex.printStackTrace();
 		}
 	}
+	
+	public boolean hasPermission(Player p, String permission) {
+		return p.hasPermission(permission);
+	}
 
 	public Plugin getPlugin() {
 		return superperms;

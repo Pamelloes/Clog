@@ -14,7 +14,7 @@ public class ClogSpoutListener extends SpoutListener {
 	@Override
 	public void onSpoutcraftFailed(SpoutcraftFailedEvent e) {
 		SpoutPlayer p = e.getPlayer();
-		if(p.hasPermission("clog.ignore")) return;
+		if(clog.hasPermission(p,"clog.ignore")) return;
 		clog.saveGroups(p);
 		clog.setGroups(p, "You must be using Spoutcraft", clog.getLowestGroup());
 	}

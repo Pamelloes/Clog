@@ -10,9 +10,11 @@ public interface PermissionsHandler {
 	public GenericGroup getLowestGroup();
 	
 	public void saveGroups(Player p);
-	public void saveGroups(Player p, List<GenericGroup> reason);
+	public void saveGroups(Player p, List<GenericGroup> groups);
 	
 	public void restoreGroups(Player p, String reason);
+	
+	public boolean hasPermission(Player p, String permission);
 	
 	/**
 	 * Utility method for setting a player's group.

@@ -81,6 +81,10 @@ public class Clog extends JavaPlugin {
 		return handler;
 	}
 	
+	public boolean hasPermission(Player p, String permission) {
+		return handler.hasPermission(p, permission);
+	}
+	
 	public GenericGroup getLowestGroup() {
 		return handler.getLowestGroup();
 	}
