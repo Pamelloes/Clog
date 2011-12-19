@@ -28,7 +28,7 @@
     </dependency>
     <dependency>
     	<groupId>org.bukkit</groupId>
-    	<artifactId>craftbukkit</artifactId>
+    	<artifactId>bukkit</artifactId>
     	<version>0.0.1-SNAPSHOT</version>
     	<scope>compile</scope>
     </dependency>
@@ -42,6 +42,11 @@
       <groupId>ru.tehkode</groupId>
       <artifactId>PermissionsEx</artifactId>
       <version>1.17</version>
+    </dependency>
+ 	<dependency>
+      <groupId>de.bananaco</groupId>
+      <artifactId>bPermissions</artifactId>
+      <version>1337-SNAPSHOT</version>
     </dependency>
   </dependencies>
   <description>Clog affects users' permissions based on whether or not they use Spoutcraft.</description>
