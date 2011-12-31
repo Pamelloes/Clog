@@ -5,10 +5,10 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
 import org.dyndns.pamelloes.Clog.Clog;
+import org.dyndns.pamelloes.Clog.Clog.Reason;
 
 import ru.tehkode.permissions.PermissionGroup;
 import ru.tehkode.permissions.PermissionManager;
@@ -16,7 +16,6 @@ import ru.tehkode.permissions.PermissionUser;
 import ru.tehkode.permissions.bukkit.PermissionsEx;
 
 public class PEXHandler implements PermissionsHandler {
-	@SuppressWarnings("unused")
 	private Clog clog;
 	private PermissionsEx pex;
 	private PermissionManager pexh;
@@ -50,40 +49,29 @@ public class PEXHandler implements PermissionsHandler {
 		map.put(p, groups);
 	}
 
-	public void restoreGroups(Player p, String reason) {
-		PermissionUser user = pexh.getUser(p);
-		user.setGroups(new PermissionGroup[0]);
+	public void restoreGroups(Player p, Reason reason) {
 		List<GenericGroup> restore = map.remove(p);
-		String message = ChatColor.AQUA + "You have been put into group" + (restore.size()>0 ? "s" : "");
-		for(GenericGroup g : restore) {
-			Object[] data = (Object[]) g.getActualGroup();
-			String world = (String) data[0];
-			PermissionGroup group = (PermissionGroup) data[1];
-			if(world!=null) user.addGroup(group, world);
-			else user.addGroup(group);
-			message+=" \""+group.getName()+"\"";
-		}
-		message+=" because: " + ChatColor.RED + reason;
-		p.sendMessage(message);
+		if(restore==null) return;
+		setGroups(p, reason, restore.toArray(new GenericGroup[0]));
 	}
 
 	public boolean hasPermission(Player p, String permission) {
 		return pexh.has(p, permission);
 	}
 
-	public void setGroups(Player p, String reason, GenericGroup... groups) {
+	public void setGroups(Player p, Reason reason, GenericGroup... groups) {
 		PermissionUser user = pexh.getUser(p);
 		user.setGroups(new PermissionGroup[0]);
-		String message = ChatColor.AQUA + "You have been put into group" + (groups.length>0 ? "s" : "");
-		for(GenericGroup g : groups) {
-			Object[] data = (Object[]) g.getActualGroup();
+		String[] names = new String[groups.length];
+		for(int i=0;i<groups.length;i++) {
+			Object[] data = (Object[]) groups[i].getActualGroup();
 			String world = (String) data[0];
 			PermissionGroup group = (PermissionGroup) data[1];
 			if(world!=null) user.addGroup(group, world);
 			else user.addGroup(group);
-			message+=" \""+group.getName()+"\"";
+			names[i]=group.getName();
 		}
-		message+=" because: " + ChatColor.RED + reason;
+		String message = clog.getGroupChangeMessage(names, reason);
 		p.sendMessage(message);
 	}
 

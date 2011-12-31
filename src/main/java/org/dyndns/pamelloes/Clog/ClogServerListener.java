@@ -21,7 +21,6 @@ public class ClogServerListener extends ServerListener {
 	}
 	
 	public void handleEnable(Plugin p) {
-		clog.log.info("[Clog] " + p.getDescription().getName());
 		if(p.getDescription().getName().equals("PermissionsBukkit")) {
 			try {
 				Class<? extends Object> clazz = Class.forName("org.dyndns.pamelloes.Clog.permissions.SuperPermsHandler");

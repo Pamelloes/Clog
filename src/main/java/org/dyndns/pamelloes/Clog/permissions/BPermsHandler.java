@@ -5,11 +5,11 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.bukkit.ChatColor;
 import org.bukkit.World;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
 import org.dyndns.pamelloes.Clog.Clog;
+import org.dyndns.pamelloes.Clog.Clog.Reason;
 
 import de.bananaco.permissions.Permissions;
 import de.bananaco.permissions.worlds.WorldPermissionsManager;
@@ -50,8 +50,9 @@ public class BPermsHandler implements PermissionsHandler {
 		map.put(p, groups);
 	}
 
-	public void restoreGroups(Player p, String reason) {
+	public void restoreGroups(Player p, Reason reason) {
 		List<GenericGroup> groups = map.remove(p);
+		if(groups==null) return;
 		setGroups(p, reason, groups.toArray(new GenericGroup[0]));
 	}
 
@@ -59,29 +60,29 @@ public class BPermsHandler implements PermissionsHandler {
 		return wpm.getPermissionSet(p.getWorld()).getPlayerNodes(p).contains(permission);
 	}
 
-	public void setGroups(Player p, String reason, GenericGroup... groups) {
+	public void setGroups(Player p, Reason reason, GenericGroup... groups) {
 		for(World w : clog.getServer().getWorlds()) {
 			wpm.getPermissionSet(w).setGroup(p, null);
 		}
-		String message = ChatColor.AQUA + "You have been put into group" + (groups.length>0 ? "s" : "");
+		List<String> names = new ArrayList<String>();
 		for(GenericGroup g : groups) {
-			if(g instanceof Map) {
+			if(g.getActualGroup() instanceof Map) {
 				@SuppressWarnings("unchecked")
 				Map<World, String> data = (Map<World, String>) g.getActualGroup();
 				String group = data.get(p.getWorld());
 				wpm.getPermissionSet(p.getWorld()).addGroup(p, group);
-				 message+=" \""+group+"\"";
+				names.add(group);
 			} else {
 				Object[] data = (Object[]) g.getActualGroup();
 				@SuppressWarnings("unchecked")
 				List<String> g2 = (List<String>) data[1];
 				for(String s : g2) {
 					wpm.getPermissionSet((World) data[0]).addGroup(p, s);
-					 message+=" \""+s+"\"";
 				}
+				names.addAll(g2);
 			}
 		}
-		message+=" because: " + ChatColor.RED + reason;
+		String message = clog.getGroupChangeMessage(names.toArray(new String[0]), reason);
 		p.sendMessage(message);
 	}
 

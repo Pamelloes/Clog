@@ -1,6 +1,6 @@
 name: Clog
 main: org.dyndns.pamelloes.Clog.Clog
-version: 0.2
+version: 0.3
 description: Clog affects users' permissions based on whether or not they use Spoutcraft.
 depend: [Spout]
 softdepend: [PermissionsBukkit, PermissionsEx, bPermissions]

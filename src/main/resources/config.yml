@@ -1,0 +1,18 @@
+#things that can be turned on or off.
+options:
+    #If this is set to true, then the player won't be able to do anything until they have been confirmed to have Spoutcraft/not have Spoutcraft.
+    blockimmediately: true
+#messages to be sent to the player. Possible variables: {groups} groups the player is in. {reason} reason the event has ocurred.
+messages:
+    groupchange: You have been put into groups {groups} because {reason}
+#reasons to be sent  to the player. These will take the place of {reason} in messages.
+reasons:
+    scfailed: You must be using Spoutcraft.
+#Special groups needed by the program.
+groups:
+    #The lowest group, comment this out if you are using bPermissions
+    lowest: default
+    #bPermissions lowest group, uncomment this if you are using bpermissions.
+    #lowest:
+    ##replace "<nameodworld>" with the name of a world in your server. Duplicate the line for more worlds. Any world not specified, the default will be used.
+    #    <nameofworld>: default

@@ -7,12 +7,12 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
 import org.dyndns.pamelloes.Clog.Clog;
+import org.dyndns.pamelloes.Clog.Clog.Reason;
 
 import com.platymuus.bukkit.permissions.Group;
 import com.platymuus.bukkit.permissions.PermissionsPlugin;
@@ -46,15 +46,19 @@ public class SuperPermsHandler implements PermissionsHandler {
 		superpermsmap.put(p, groups);
 	}
 
-	public void restoreGroups(Player p, String reason) {
+	public void restoreGroups(Player p, Reason reason) {
 		List<GenericGroup> groups = superpermsmap.remove(p);
 		if(groups==null) return;
  		setGroups(p, reason, groups.toArray(new GenericGroup[0]));
 	}
 
-	public void setGroups(Player player, String reason, GenericGroup... group) {
+	public void setGroups(Player player, Reason reason, GenericGroup... group) {
 		Group[] groups = new Group[group.length];
-		for(int i=0;i<group.length;i++) groups[i] = (Group) group[i].getActualGroup();
+		String[] names = new String[group.length];
+		for(int i=0;i<group.length;i++) {
+			groups[i] = (Group) group[i].getActualGroup();
+			names[i] = groups[i].getName();
+		}
 		try {
 			Field f = PermissionsPlugin.class.getDeclaredField("commandExecutor");
 			f.setAccessible(true);
@@ -64,9 +68,7 @@ public class SuperPermsHandler implements PermissionsHandler {
 			m.setAccessible(true);
 			m.invoke(ce, clog.getServer().getConsoleSender(), null, new String[]{"player","setgroup",player.getName(),groups[0].getName()});
 			for(int i=1;i<groups.length; i++) m.invoke(ce, clog.getServer().getConsoleSender(), null, new String[]{"player","addgroup",player.getName(),groups[i].getName()});
-			String message = ChatColor.AQUA + "You have been put into group" + (groups.length>0 ? "s" : "");
-			for(Group g : groups) message+=" \""+g.getName()+"\"";
-			message+=" because: " + ChatColor.RED + reason;
+			String message = clog.getGroupChangeMessage(names, reason);
 			player.sendMessage(message);
 		} catch(Exception ex) {
 			ex.printStackTrace();
