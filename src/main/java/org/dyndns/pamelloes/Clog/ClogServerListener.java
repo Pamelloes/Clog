@@ -17,34 +17,40 @@ public class ClogServerListener extends ServerListener {
 	
 	@Override
 	public void onPluginEnable(PluginEnableEvent e) {
-		if(e.getPlugin().getDescription().getName().equals("PermissionsBukkit")) {
+		handleEnable(e.getPlugin());
+	}
+	
+	public void handleEnable(Plugin p) {
+		clog.log.info("[Clog] " + p.getDescription().getName());
+		if(p.getDescription().getName().equals("PermissionsBukkit")) {
 			try {
 				Class<? extends Object> clazz = Class.forName("org.dyndns.pamelloes.Clog.permissions.SuperPermsHandler");
 				Constructor<? extends Object> c = clazz.getConstructor(Clog.class, Plugin.class);
-				PermissionsHandler ph = (PermissionsHandler) c.newInstance(clog, e.getPlugin());
+				PermissionsHandler ph = (PermissionsHandler) c.newInstance(clog, p);
 				clog.setHandler(ph);
 			} catch(Exception ex) {
 				//ignore
 			}
-		} else if(e.getPlugin().getDescription().getName().equals("PermissionsEx")) {
+		} else if(p.getDescription().getName().equals("PermissionsEx")) {
 			try {
 				Class<? extends Object> clazz = Class.forName("org.dyndns.pamelloes.Clog.permissions.PEXHandler");
 				Constructor<? extends Object> c = clazz.getConstructor(Clog.class, Plugin.class);
-				PermissionsHandler ph = (PermissionsHandler) c.newInstance(clog, e.getPlugin());
+				PermissionsHandler ph = (PermissionsHandler) c.newInstance(clog, p);
 				clog.setHandler(ph);
 			} catch(Exception ex) {
 				//ignore
 			}
-		} else if(e.getPlugin().getDescription().getName().equals("bPermissions")) {
+		} else if(p.getDescription().getName().equals("bPermissions")) {
 			try {
 				Class<? extends Object> clazz = Class.forName("org.dyndns.pamelloes.Clog.permissions.BPermsHandler");
 				Constructor<? extends Object> c = clazz.getConstructor(Clog.class, Plugin.class);
-				PermissionsHandler ph = (PermissionsHandler) c.newInstance(clog, e.getPlugin());
+				PermissionsHandler ph = (PermissionsHandler) c.newInstance(clog, p);
 				clog.setHandler(ph);
 			} catch(Exception ex) {
 				//ignore
 			}
 		}
+		
 	}
 	
 	@Override

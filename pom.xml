@@ -22,14 +22,14 @@
     </dependency>
     <dependency>
     	<groupId>org.getspout</groupId>
-    	<artifactId>spoutapi</artifactId>
+    	<artifactId>spoutpluginapi</artifactId>
     	<version>dev-SNAPSHOT</version>
     	<scope>compile</scope>
     </dependency>
     <dependency>
     	<groupId>org.bukkit</groupId>
     	<artifactId>bukkit</artifactId>
-    	<version>0.0.1-SNAPSHOT</version>
+    	<version>1.0.1-R2-SNAPSHOT</version>
     	<scope>compile</scope>
     </dependency>
     <dependency>
@@ -47,6 +47,7 @@
       <groupId>de.bananaco</groupId>
       <artifactId>bPermissions</artifactId>
       <version>1337-SNAPSHOT</version>
+       <scope>compile</scope>
     </dependency>
   </dependencies>
   <description>Clog affects users' permissions based on whether or not they use Spoutcraft.</description>

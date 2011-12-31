@@ -29,7 +29,7 @@ public class BPermsHandler implements PermissionsHandler {
 		bperm = (Permissions) plugin;
 		wpm = Permissions.getWorldPermissionsManager();
 		for(World w : clog.getServer().getWorlds()) {
-			lowestgroup.put(w, (String)clog.getConfig().get("invalidgroup",wpm.getPermissionSet(w).getDefaultGroup()));
+			lowestgroup.put(w, (String)clog.getConfig().get("invalidgroup."+w.getName(),wpm.getPermissionSet(w).getDefaultGroup()));
 		}
 	}
 	

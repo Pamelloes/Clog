@@ -11,6 +11,7 @@ import org.bukkit.event.Event.Priority;
 import org.bukkit.event.Event.Type;
 import org.bukkit.permissions.Permission;
 import org.bukkit.permissions.PermissionDefault;
+import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.dyndns.pamelloes.Clog.permissions.GenericGroup;
@@ -32,6 +33,9 @@ public class Clog extends JavaPlugin {
 		pm.registerEvent(Type.CUSTOM_EVENT, cspl, Priority.Monitor, this);
 		pm.registerEvent(Type.PLAYER_QUIT, cpl, Priority.Monitor, this);
 		pm.registerEvent(Type.PLAYER_KICK, cpl, Priority.Monitor, this);
+		
+		for(Plugin p : pm.getPlugins()) csel.handleEnable(p);
+		
 		Permission p = new Permission("clog.ignore", "Allows the player to keep his or her rank without using Spoutcraft.");
 		p.setDefault(PermissionDefault.OP);
 		pm.addPermission(p);
