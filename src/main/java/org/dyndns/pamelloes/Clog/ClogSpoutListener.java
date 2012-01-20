@@ -21,9 +21,10 @@ public class ClogSpoutListener extends SpoutListener {
 	@Override
 	public void onSpoutcraftFailed(SpoutcraftFailedEvent e) {
 		SpoutPlayer p = e.getPlayer();
-		if(clog.hasPermission(p,"clog.ignore")) return;
-		clog.saveGroups(p);
-		clog.setGroups(p, Reason.SCFailed, clog.getLowestGroup());
+		if(!clog.hasPermission(p,"clog.ignore.groups")) {
+			clog.saveGroups(p);
+			clog.setGroups(p, Reason.SCFailed, clog.getLowestGroup());
+		}
 		clog.authenticate(e.getPlayer());
 	}
 }

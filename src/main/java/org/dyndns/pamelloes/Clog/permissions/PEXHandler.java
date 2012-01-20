@@ -59,6 +59,14 @@ public class PEXHandler implements PermissionsHandler {
 		return pexh.has(p, permission);
 	}
 
+	public void givePermission(Player p, String permission) {
+		PermissionsEx.getUser(p).addPermission(permission);
+	}
+
+	public void takePermission(Player p, String permission) {
+		PermissionsEx.getUser(p).removePermission(permission);
+	}
+
 	public void setGroups(Player p, Reason reason, GenericGroup... groups) {
 		PermissionUser user = pexh.getUser(p);
 		user.setGroups(new PermissionGroup[0]);
@@ -78,5 +86,4 @@ public class PEXHandler implements PermissionsHandler {
 	public Plugin getPlugin() {
 		return pex;
 	}
-
 }

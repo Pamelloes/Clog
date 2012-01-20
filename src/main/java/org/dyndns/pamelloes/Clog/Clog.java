@@ -41,7 +41,7 @@ public class Clog extends JavaPlugin {
 	private ClogEntityListener cel = new ClogEntityListener(this);
 	private ClogBlockListener cbl = new ClogBlockListener(this);
 	
-	private List<Player> notauthenticated = new ArrayList<Player>();
+	private List<SpoutPlayer> notauthenticated = new ArrayList<SpoutPlayer>();
 
 	public void onEnable() {
 		PluginManager pm = getServer().getPluginManager();
@@ -98,15 +98,28 @@ public class Clog extends JavaPlugin {
 		cpl = null;
 	}
 	
-	public void addUnauthenticatedPlayer(Player p) {
+	public void addUnauthenticatedPlayer(SpoutPlayer p) {
 		notauthenticated.add(p);
+		if(hasPermission(p, "clog.ignore.perms")) return;
+		List<?> list = getConfig().getList("permissions.scperms",null);
+		if(list!=null) for(Object o : list) takePermission(p,(String) o);
+		list = getConfig().getList("permissions.vanillaperms",null);
+		if(list!=null) for(Object o : list) givePermission(p,(String) o);
 	}
 	
-	public void authenticate(Player p) {
+	public void authenticate(SpoutPlayer p) {
 		notauthenticated.remove(p);
+		if(hasPermission(p, "clog.ignore.perms")) return;
+		if(p.isSpoutCraftEnabled()) {
+			List<?> list = getConfig().getList("permissions.scperms",null);
+			if(list!=null) for(Object o : list) givePermission(p,(String) o);
+		} else {
+			List<?> list = getConfig().getList("permissions.vanillaperms",null);
+			if(list!=null) for(Object o : list) givePermission(p,(String) o);
+		}
 	}
 	
-	public boolean isAuthenticated(Player p) {
+	public boolean isAuthenticated(SpoutPlayer p) {
 		return !notauthenticated.contains(p);
 	}
 	
@@ -147,6 +160,14 @@ public class Clog extends JavaPlugin {
 	
 	public boolean hasPermission(Player p, String permission) {
 		return handler.hasPermission(p, permission);
+	}
+	
+	public void givePermission(Player p, String permission) {
+		handler.givePermission(p, permission);
+	}
+	
+	public void takePermission(Player p, String permission) {
+		handler.takePermission(p, permission);
 	}
 	
 	public GenericGroup getLowestGroup() {

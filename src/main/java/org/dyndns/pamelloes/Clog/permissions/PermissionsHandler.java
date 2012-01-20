@@ -16,6 +16,8 @@ public interface PermissionsHandler {
 	public void restoreGroups(Player p, Reason reason);
 	
 	public boolean hasPermission(Player p, String permission);
+	public void givePermission(Player p, String permission);
+	public void takePermission(Player p, String permission);
 	
 	/**
 	 * Utility method for setting a player's group.

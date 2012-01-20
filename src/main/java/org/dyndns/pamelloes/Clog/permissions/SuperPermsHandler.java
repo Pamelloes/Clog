@@ -79,6 +79,34 @@ public class SuperPermsHandler implements PermissionsHandler {
 		return p.hasPermission(permission);
 	}
 
+	public void givePermission(Player p, String permission) {
+		try {
+			Field f = PermissionsPlugin.class.getDeclaredField("commandExecutor");
+			f.setAccessible(true);
+			Object ce = f.get(superperms);
+			Class<?> c = Class.forName("com.platymuus.bukkit.permissions.PermissionsCommand");
+			Method m = c.getDeclaredMethod("playerCommand", CommandSender.class, Command.class, String[].class);
+			m.setAccessible(true);
+			m.invoke(ce, clog.getServer().getConsoleSender(), null, new String[]{"player","setperm",p.getName(),permission}); 
+		} catch(Exception ex) {
+			ex.printStackTrace();
+		}
+	}
+
+	public void takePermission(Player p, String permission) {
+		try {
+			Field f = PermissionsPlugin.class.getDeclaredField("commandExecutor");
+			f.setAccessible(true);
+			Object ce = f.get(superperms);
+			Class<?> c = Class.forName("com.platymuus.bukkit.permissions.PermissionsCommand");
+			Method m = c.getDeclaredMethod("playerCommand", CommandSender.class, Command.class, String[].class);
+			m.setAccessible(true);
+			m.invoke(ce, clog.getServer().getConsoleSender(), null, new String[]{"player","unsetperm",p.getName(),permission}); 
+		} catch(Exception ex) {
+			ex.printStackTrace();
+		}	
+	}
+
 	public Plugin getPlugin() {
 		return superperms;
 	}

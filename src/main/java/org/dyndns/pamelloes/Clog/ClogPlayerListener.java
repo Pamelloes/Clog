@@ -7,6 +7,7 @@ import org.bukkit.event.player.PlayerKickEvent;
 import org.bukkit.event.player.PlayerListener;
 import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
+import org.getspout.spoutapi.player.SpoutPlayer;
 
 public class ClogPlayerListener extends PlayerListener {
 	private Clog clog;
@@ -17,38 +18,38 @@ public class ClogPlayerListener extends PlayerListener {
 	
 	@Override
 	public void onPlayerJoin(PlayerJoinEvent e) {
-		clog.addUnauthenticatedPlayer(e.getPlayer());
+		clog.addUnauthenticatedPlayer((SpoutPlayer) e.getPlayer());
 	}
 	
 	@Override
 	public void onPlayerKick(PlayerKickEvent e) {
 		clog.restoreGroups(e.getPlayer());
-		clog.authenticate(e.getPlayer());
+		clog.authenticate((SpoutPlayer) e.getPlayer());
 	}
 	
 	@Override
 	public void onPlayerQuit(PlayerQuitEvent e) {
 		clog.restoreGroups(e.getPlayer());
-		clog.authenticate(e.getPlayer());
+		clog.authenticate((SpoutPlayer) e.getPlayer());
 	}
 
 	@Override
 	public void onPlayerInteract(PlayerInteractEvent e) {
-		if(!clog.isAuthenticated(e.getPlayer())) {
+		if(!clog.isAuthenticated((SpoutPlayer) e.getPlayer())) {
 			e.setCancelled(true);
 		}
 	}
 	
 	@Override
 	public void onPlayerChat(PlayerChatEvent e) {
-		if(!clog.isAuthenticated(e.getPlayer())) {
+		if(!clog.isAuthenticated((SpoutPlayer) e.getPlayer())) {
 			e.setCancelled(true);
 		}
 	}
 	
 	@Override
 	public void onPlayerMove(PlayerMoveEvent e) {
-		if(!clog.isAuthenticated(e.getPlayer())) {
+		if(!clog.isAuthenticated((SpoutPlayer) e.getPlayer())) {
 			e.setCancelled(true);
 		}
 	}

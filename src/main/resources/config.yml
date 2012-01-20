@@ -8,7 +8,8 @@ messages:
 #reasons to be sent  to the player. These will take the place of {reason} in messages.
 reasons:
     scfailed: You must be using Spoutcraft.
-#Special groups needed by the program.
+#Special groups needed by the program. A player will not be put in these
+#if they have "clog.ignore.groups"
 groups:
     #The lowest group, comment this out if you are using bPermissions
     lowest: default
@@ -16,3 +17,14 @@ groups:
     #lowest:
     ##replace "<nameodworld>" with the name of a world in your server. Duplicate the line for more worlds. Any world not specified, the default will be used.
     #    <nameofworld>: default
+#Below are various permissions that will be added/removed when SC is confirmed/unconfirmed.
+#You can remove any list you don't want.
+permissions:
+    #When a player is determined to be using SC,they are given these perms.
+    #They are taken away when the player logs on (if they don't have "clog.ignore.perms").
+    scperms:
+    - my.epic.permission
+    #When a player is determined to be using vanilla,they are given these perms.
+    #They are taken away when the player logs on (if they don't have "clog.ignore.perms").
+    vanillaperms:
+    - my.epic.permission2
