@@ -11,6 +11,9 @@ import java.util.jar.JarFile;
 import java.util.logging.Logger;
 
 import org.bukkit.ChatColor;
+import org.bukkit.command.Command;
+import org.bukkit.command.CommandExecutor;
+import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Event.Priority;
 import org.bukkit.event.Event.Type;
@@ -24,7 +27,7 @@ import org.dyndns.pamelloes.Clog.permissions.PermissionsHandler;
 import org.getspout.spoutapi.SpoutManager;
 import org.getspout.spoutapi.player.SpoutPlayer;
 
-public class Clog extends JavaPlugin {
+public class Clog extends JavaPlugin implements CommandExecutor {
 	public static enum Reason {
 		SCFailed,
 		Restore,//never shown, replaced with ""
@@ -59,6 +62,7 @@ public class Clog extends JavaPlugin {
 			pm.registerEvent(Type.BLOCK_BREAK, cbl, Priority.Monitor, this);
 		}
 		
+		getCommand("hasspout").setExecutor(this);
 		
 		for(Plugin p : pm.getPlugins()) csel.handleEnable(p);
 		
@@ -194,6 +198,16 @@ public class Clog extends JavaPlugin {
 		handler.setGroups(p, reason, groups);
 	}
 
+	public boolean onCommand(CommandSender sender, Command cmd, String commandLabel, String[] args){
+		if(cmd.getName().equalsIgnoreCase("hasspout") && args.length==0){
+			Player p = getServer().getPlayer(args[0]);
+			if(p==null) return false;
+			sender.sendMessage(p.getName() + "has spoutcraft: " + ((SpoutPlayer) p).isSpoutCraftEnabled());
+			return true;
+		}
+		return false; 
+	}
+	
 	/**
 	 * Extract files from the plugin jar and optionally cache them on the client.
 	 * @param regex a pattern of files to extract
