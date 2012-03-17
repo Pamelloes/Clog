@@ -14,7 +14,7 @@ import de.bananaco.bpermissions.api.Group;
 import de.bananaco.bpermissions.api.User;
 import de.bananaco.bpermissions.api.World;
 import de.bananaco.bpermissions.api.WorldManager;
-import de.bananaco.permissions.Permissions;
+import de.bananaco.bpermissions.imp.Permissions;
 
 public class BPermsHandler implements PermissionsHandler {
 	private Clog clog;

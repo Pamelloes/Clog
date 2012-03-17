@@ -15,8 +15,6 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
-import org.bukkit.event.Event.Priority;
-import org.bukkit.event.Event.Type;
 import org.bukkit.permissions.Permission;
 import org.bukkit.permissions.PermissionDefault;
 import org.bukkit.plugin.Plugin;
@@ -38,33 +36,17 @@ public class Clog extends JavaPlugin implements CommandExecutor {
 	
 	private PermissionsHandler handler;
 	
-	private ClogServerListener csel = new ClogServerListener(this);
-	private ClogSpoutListener cspl = new ClogSpoutListener(this);
-	private ClogPlayerListener cpl = new ClogPlayerListener(this);
-	private ClogEntityListener cel = new ClogEntityListener(this);
-	private ClogBlockListener cbl = new ClogBlockListener(this);
-	
 	private List<SpoutPlayer> notauthenticated = new ArrayList<SpoutPlayer>();
 
 	public void onEnable() {
+		ClogListener cl = new ClogListener(this);
 		PluginManager pm = getServer().getPluginManager();
-		pm.registerEvent(Type.PLUGIN_ENABLE, csel, Priority.Monitor, this);
-		pm.registerEvent(Type.CUSTOM_EVENT, cspl, Priority.Monitor, this);
-		pm.registerEvent(Type.PLAYER_QUIT, cpl, Priority.Monitor, this);
-		pm.registerEvent(Type.PLAYER_KICK, cpl, Priority.Monitor, this);
-		
-		if(getConfig().getBoolean("options.blockimmediately", true)) {
-			pm.registerEvent(Type.PLAYER_JOIN, cpl, Priority.Monitor, this);
-			pm.registerEvent(Type.PLAYER_INTERACT, cpl, Priority.Monitor, this);
-			pm.registerEvent(Type.PLAYER_CHAT, cpl, Priority.Monitor, this);
-			pm.registerEvent(Type.PLAYER_MOVE, cpl, Priority.Monitor, this);
-			pm.registerEvent(Type.ENTITY_DAMAGE, cel, Priority.Monitor, this);
-			pm.registerEvent(Type.BLOCK_BREAK, cbl, Priority.Monitor, this);
-		}
+		pm.registerEvents(cl, this);
+		if(getConfig().getBoolean("options.blockimmediately", true)) pm.registerEvents(new ClogListenerBlockImmediately(this), this); 
 		
 		getCommand("hasspout").setExecutor(this);
 		
-		for(Plugin p : pm.getPlugins()) csel.handleEnable(p);
+		for(Plugin p : pm.getPlugins()) cl.handleEnable(p);
 		
 		Permission p = new Permission("clog.ignore", "Allows the player to keep his or her rank without using Spoutcraft.");
 		p.setDefault(PermissionDefault.OP);
@@ -97,9 +79,6 @@ public class Clog extends JavaPlugin implements CommandExecutor {
 		log.info("[Clog] Clog disabled.");
 		log = null;
 		handler = null;
-		csel = null;
-		cspl = null;
-		cpl = null;
 	}
 	
 	public void addUnauthenticatedPlayer(SpoutPlayer p) {
@@ -199,10 +178,10 @@ public class Clog extends JavaPlugin implements CommandExecutor {
 	}
 
 	public boolean onCommand(CommandSender sender, Command cmd, String commandLabel, String[] args){
-		if(cmd.getName().equalsIgnoreCase("hasspout") && args.length==0){
+		if(cmd.getName().equalsIgnoreCase("hasspout") && args.length==1){
 			Player p = getServer().getPlayer(args[0]);
 			if(p==null) return false;
-			sender.sendMessage(p.getName() + "has spoutcraft: " + ((SpoutPlayer) p).isSpoutCraftEnabled());
+			sender.sendMessage(p.getName() + (((SpoutPlayer) p).isSpoutCraftEnabled() ? " has " : " does not have ") + "spoutcraft.");
 			return true;
 		}
 		return false; 
