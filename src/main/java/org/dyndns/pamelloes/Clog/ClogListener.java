@@ -17,6 +17,7 @@ import org.getspout.spoutapi.player.SpoutPlayer;
 
 public class ClogListener implements Listener {
 	private Clog clog;
+	private boolean foundVault;
 
 	public ClogListener(Clog clog) {
 		this.clog=clog;
@@ -28,7 +29,17 @@ public class ClogListener implements Listener {
 	}
 
 	public void handleEnable(Plugin p) {
-		if(p.getDescription().getName().equals("PermissionsBukkit")) {
+		if(foundVault) return;
+		if(p.getDescription().getName().equals("Vault")) {
+			try {
+				Class<? extends Object> clazz = Class.forName("org.dyndns.pamelloes.Clog.permissions.VaultHandler");
+				Constructor<? extends Object> c = clazz.getConstructor(Clog.class, Plugin.class);
+				PermissionsHandler ph = (PermissionsHandler) c.newInstance(clog, p);
+				clog.setHandler(ph);
+			} catch(Exception ex) {
+				//ignore
+			}
+		} else if(p.getDescription().getName().equals("PermissionsBukkit")) {
 			try {
 				Class<? extends Object> clazz = Class.forName("org.dyndns.pamelloes.Clog.permissions.SuperPermsHandler");
 				Constructor<? extends Object> c = clazz.getConstructor(Clog.class, Plugin.class);

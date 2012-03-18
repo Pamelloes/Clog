@@ -27,7 +27,7 @@ public class BPermsHandler implements PermissionsHandler {
 	
 	public BPermsHandler(Clog clog, Plugin plugin) {
 		this.clog = clog;
-		if(!(plugin instanceof Permissions)) throw new IllegalArgumentException("plugin must be a de.bananaco.permissions.Permissions");
+		if(!(plugin instanceof Permissions)) throw new IllegalArgumentException("plugin must be a de.bananaco.permissions.imp.Permissions");
 		bperm = (Permissions) plugin;
 		for(World w : wm.getAllWorlds()) lowestgroup.put(w, (String)clog.getConfig().get("invalidgroup."+w.getName(),w.getDefaultGroup()));
 	}
