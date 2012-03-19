@@ -72,7 +72,7 @@ public class ClogListener implements Listener {
 
 	@EventHandler
 	public void onPluginDisable(PluginDisableEvent e) {
-		if(clog.getHandler().getPlugin().equals(e.getPlugin())) clog.setHandler(null);
+		if(clog.getHandler()!=null && clog.getHandler().getPlugin().equals(e.getPlugin())) clog.setHandler(null);
 	}
 
 	@EventHandler
